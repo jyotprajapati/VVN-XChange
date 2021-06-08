@@ -40,9 +40,27 @@ class _SignUpState extends State<SignUp> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.arrow_forward_sharp),
-        onPressed: () {
-          Auth().signUp(
-              emailEditingController.text, passwordEditingController.text);
+        onPressed: () async {
+          bool isUserIdAlready =
+              await Auth().checkUniqueUserId(usernameEditingController.text);
+          //   Auth().signUp(
+          //       emailEditingController.text, passwordEditingController.text);
+          // },
+          print(isUserIdAlready);
+          if (isUserIdAlready) {
+            print("Showing User exists Dialog");
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text('UserId already there Please try another Id'),
+                );
+              },
+            );
+          } else {
+            Auth().registerUser(emailEditingController.text,
+                passwordEditingController.text, usernameEditingController.text);
+          }
         },
         backgroundColor: ThemeColor.themePrimary,
         splashColor: ThemeColor.themeLight,
